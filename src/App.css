@@ -1,0 +1,1220 @@
+/* =========================================================
+   LUMORA ONBOARDING
+   ========================================================= */
+
+.lumora-onboarding {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.onboarding-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(1100px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 28px 0 20px;
+}
+
+.onboarding-top .lumora-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.onboarding-top .logo-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 15px;
+}
+
+.onboarding-count {
+  color: var(--text-muted);
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.onboarding-progress {
+  width: min(1100px, calc(100% - 48px));
+  height: 3px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.onboarding-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--terracotta);
+  transition: width 350ms ease;
+}
+
+.onboarding-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  width: min(720px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 70px 0 50px;
+}
+
+.onboarding-question {
+  margin-bottom: 38px;
+}
+
+.onboarding-eyebrow {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--terracotta);
+  font-family: "DM Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.onboarding-question h1 {
+  max-width: 680px;
+  margin: 0;
+  color: var(--text);
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2.1rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.onboarding-question p {
+  max-width: 560px;
+  margin: 18px 0 0;
+  color: var(--text-secondary);
+  font-family: "DM Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.onboarding-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.onboarding-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 62px;
+  padding: 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.onboarding-option:hover {
+  border-color: rgba(182, 106, 76, 0.35);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.onboarding-option.selected {
+  border-color: var(--terracotta);
+  background: #fbf1eb;
+}
+
+.option-check {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 12px;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.onboarding-option.selected .option-check {
+  border-color: var(--terracotta);
+  background: var(--terracotta);
+  color: #fff;
+}
+
+.onboarding-input {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  outline: none;
+  background: var(--surface);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  font-size: 17px;
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.onboarding-input::placeholder {
+  color: var(--text-muted);
+}
+
+.onboarding-input:focus {
+  border-color: var(--terracotta);
+  box-shadow: 0 0 0 4px rgba(182, 106, 76, 0.09);
+}
+
+.onboarding-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.onboarding-back {
+  min-height: 46px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.onboarding-back:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.onboarding-back:disabled {
+  visibility: hidden;
+}
+
+.onboarding-next {
+  min-width: 130px;
+}
+
+.onboarding-next:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.onboarding-footer {
+  width: min(1100px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 0 0 28px;
+  color: var(--text-muted);
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------
+   Onboarding mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 650px) {
+  .onboarding-top {
+    width: calc(100% - 32px);
+    padding-top: 20px;
+  }
+
+  .onboarding-progress {
+    width: calc(100% - 32px);
+  }
+
+  .onboarding-content {
+    width: calc(100% - 32px);
+    padding: 50px 0 35px;
+  }
+
+  .onboarding-question {
+    margin-bottom: 30px;
+  }
+
+  .onboarding-question h1 {
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .onboarding-question p {
+    font-size: 14px;
+  }
+
+  .onboarding-options {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .onboarding-option {
+    min-height: 58px;
+  }
+
+  .onboarding-actions {
+    margin-top: 28px;
+  }
+
+  .onboarding-footer {
+    width: calc(100% - 32px);
+    padding-bottom: 20px;
+  }
+}
+
+/* =========================================================
+   LUMORA CINEMATIC INTRO
+   ========================================================= */
+
+.lumora-intro {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 50% 48%, #332820 0%, #181310 42%, #0b0908 100%);
+  color: #f7f0e7;
+  isolation: isolate;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------
+   Atmosphere
+   --------------------------------------------------------- */
+
+.intro-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 28%,
+      rgba(0, 0, 0, 0.22) 62%,
+      rgba(0, 0, 0, 0.78) 100%
+    );
+}
+
+.intro-grain {
+  position: absolute;
+  inset: -50%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image:
+    repeating-radial-gradient(
+      circle at 0 0,
+      rgba(255, 255, 255, 0.8) 0,
+      rgba(255, 255, 255, 0.8) 0.7px,
+      transparent 0.7px,
+      transparent 2px
+    );
+  background-size: 5px 5px;
+  animation: grainMove 0.22s steps(2) infinite;
+}
+
+.intro-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 90px 90px;
+  mask-image: radial-gradient(circle at center, black, transparent 72%);
+}
+
+.intro-light {
+  position: absolute;
+  z-index: 0;
+  width: 42rem;
+  height: 42rem;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(90px);
+  opacity: 0.16;
+}
+
+.intro-light-one {
+  top: -24rem;
+  left: 10%;
+  background: #b66a4c;
+  animation: lightFloatOne 12s ease-in-out infinite alternate;
+}
+
+.intro-light-two {
+  right: -20rem;
+  bottom: -22rem;
+  background: #80664f;
+  animation: lightFloatTwo 15s ease-in-out infinite alternate;
+}
+
+/* ---------------------------------------------------------
+   Main copy
+   --------------------------------------------------------- */
+
+.intro-content {
+  position: relative;
+  z-index: 10;
+  width: min(900px, calc(100% - 40px));
+  text-align: center;
+  pointer-events: none;
+}
+
+.intro-shot {
+  animation: shotIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.intro-small {
+  display: block;
+  margin-bottom: 22px;
+  color: #bcaea0;
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.intro-shot h1 {
+  margin: 0;
+  color: #f8f2ea;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(3rem, 7vw, 6.7rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.intro-shot p {
+  max-width: 650px;
+  margin: 28px auto 0;
+  color: #bdb1a6;
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   Scene 1 — Business chaos
+   --------------------------------------------------------- */
+
+.business-fragments {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.business-fragments span {
+  position: absolute;
+  display: block;
+  color: rgba(235, 224, 211, 0.5);
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(11px, 1.2vw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  opacity: 0;
+  animation: fragmentAppear 1.2s ease forwards;
+}
+
+.fragment-one {
+  top: 22%;
+  left: 14%;
+  animation-delay: 0.5s !important;
+}
+
+.fragment-two {
+  top: 31%;
+  right: 18%;
+  animation-delay: 1s !important;
+}
+
+.fragment-three {
+  top: 61%;
+  left: 19%;
+  animation-delay: 1.5s !important;
+}
+
+.fragment-four {
+  top: 70%;
+  right: 13%;
+  animation-delay: 2s !important;
+}
+
+.fragment-five {
+  top: 17%;
+  right: 35%;
+  animation-delay: 2.5s !important;
+}
+
+.fragment-six {
+  top: 76%;
+  left: 40%;
+  animation-delay: 3s !important;
+}
+
+.fragment-seven {
+  top: 42%;
+  left: 8%;
+  animation-delay: 3.5s !important;
+}
+
+.fragment-eight {
+  top: 50%;
+  right: 8%;
+  animation-delay: 4s !important;
+}
+
+.intro-opening .business-fragments span {
+  animation:
+    fragmentAppear 1.2s ease forwards,
+    fragmentFloat 5s ease-in-out infinite alternate;
+}
+
+.opening-trail {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+}
+
+.opening-trail span {
+  position: absolute;
+  color: rgba(182, 106, 76, 0.22);
+  font-family: "DM Sans", sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  opacity: 0;
+}
+
+.opening-trail span:nth-child(1) {
+  top: 28%;
+  left: 28%;
+  animation: trailReveal 1s 1.7s forwards;
+}
+
+.opening-trail span:nth-child(2) {
+  top: 65%;
+  right: 28%;
+  animation: trailReveal 1s 2.4s forwards;
+}
+
+.opening-trail span:nth-child(3) {
+  top: 37%;
+  right: 24%;
+  animation: trailReveal 1s 3.1s forwards;
+}
+
+.opening-trail span:nth-child(4) {
+  bottom: 26%;
+  left: 29%;
+  animation: trailReveal 1s 3.8s forwards;
+}
+
+.opening-final-line {
+  position: absolute;
+  z-index: 6;
+  bottom: 31%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(245, 237, 228, 0.62);
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  animation: finalLineReveal 1.2s 4.3s forwards;
+}
+
+/* ---------------------------------------------------------
+   Scene 2 — Lumora reveal
+   --------------------------------------------------------- */
+
+.intro-logo .intro-shot h1 {
+  font-size: clamp(4rem, 11vw, 9.5rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-shadow:
+    0 0 35px rgba(182, 106, 76, 0.18),
+    0 0 100px rgba(182, 106, 76, 0.08);
+  animation: logoReveal 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.intro-logo .intro-shot p {
+  animation: subtitleReveal 1.2s 0.55s both;
+}
+
+.intro-logo .intro-light-one {
+  opacity: 0.25;
+  transform: scale(0.8);
+  animation:
+    logoLight 2.4s cubic-bezier(0.22, 1, 0.36, 1) both,
+    lightFloatOne 12s 2.4s ease-in-out infinite alternate;
+}
+
+.intro-logo .business-fragments,
+.intro-logo .opening-trail,
+.intro-logo .opening-final-line {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+/* ---------------------------------------------------------
+   Scene 3 — Numbers → understanding
+   --------------------------------------------------------- */
+
+.intro-number-field {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.intro-understanding .intro-number-field {
+  opacity: 1;
+}
+
+.intro-number {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+}
+
+.intro-number span {
+  color: #8f8379;
+  font-family: "DM Sans", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.intro-number strong {
+  color: #eee5dc;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 500;
+}
+
+.sales-number {
+  top: 22%;
+  left: 13%;
+  animation: numberReveal 0.8s 0.25s forwards;
+}
+
+.expense-number {
+  top: 32%;
+  right: 12%;
+  animation: numberReveal 0.8s 0.5s forwards;
+}
+
+.profit-number {
+  bottom: 25%;
+  left: 17%;
+  animation: numberReveal 0.8s 0.75s forwards;
+}
+
+.intro-micro-line {
+  position: absolute;
+  z-index: 4;
+  height: 1px;
+  width: 0;
+  background: rgba(182, 106, 76, 0.38);
+  pointer-events: none;
+}
+
+.intro-understanding .micro-line-one {
+  top: 30%;
+  left: 24%;
+  animation: lineGrow 1.1s 0.9s forwards;
+}
+
+.intro-understanding .micro-line-two {
+  top: 42%;
+  right: 21%;
+  animation: lineGrow 1.1s 1.1s forwards;
+}
+
+.intro-understanding .micro-line-three {
+  bottom: 32%;
+  left: 29%;
+  animation: lineGrow 1.1s 1.3s forwards;
+}
+
+.intro-insight {
+  position: absolute;
+  z-index: 7;
+  right: 10%;
+  bottom: 17%;
+  width: min(320px, 35vw);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: rgba(255, 250, 244, 0.045);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
+  text-align: left;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.intro-understanding .intro-insight {
+  animation: insightReveal 1s 1.7s forwards;
+}
+
+.intro-insight > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #9c8e83;
+  font-family: "DM Sans", sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.intro-insight > strong {
+  display: block;
+  color: #eee6de;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.intro-insight-data {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.intro-insight-data div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.intro-insight-data small {
+  color: #84786f;
+  font-size: 9px;
+}
+
+.intro-insight-data b {
+  color: #e8ddd3;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.intro-understanding .business-fragments,
+.intro-understanding .opening-trail,
+.intro-understanding .opening-final-line {
+  opacity: 0;
+}
+
+/* ---------------------------------------------------------
+   Scene 4 — Final invitation
+   --------------------------------------------------------- */
+
+.intro-final .intro-shot h1 {
+  font-size: clamp(3rem, 7vw, 6.5rem);
+}
+
+.intro-final .intro-shot p {
+  color: #a99d93;
+}
+
+.intro-final .intro-number-field,
+.intro-final .intro-insight,
+.intro-final .business-fragments,
+.intro-final .opening-trail,
+.intro-final .opening-final-line {
+  opacity: 0;
+}
+
+/* ---------------------------------------------------------
+   Buttons
+   --------------------------------------------------------- */
+
+.intro-button {
+  margin-top: 38px;
+  min-height: 50px;
+  padding: 0 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: #f1e9df;
+  color: #241d18;
+  font-family: "DM Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.intro-button:hover {
+  transform: translateY(-2px);
+  background: #fff9f1;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.intro-button:active {
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------
+   Top controls
+   --------------------------------------------------------- */
+
+.intro-top-controls {
+  position: absolute;
+  top: 28px;
+  right: 32px;
+  z-index: 20;
+}
+
+.intro-skip {
+  border: 0;
+  background: transparent;
+  color: rgba(239, 229, 218, 0.52);
+  font-family: "DM Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.intro-skip:hover {
+  color: #f3e9df;
+}
+
+/* ---------------------------------------------------------
+   Bottom navigation
+   --------------------------------------------------------- */
+
+.intro-bottom {
+  position: absolute;
+  right: 32px;
+  bottom: 28px;
+  left: 32px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.intro-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.intro-control {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.035);
+  color: #ddd1c5;
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.intro-control:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.intro-control:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.intro-progress {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.intro-progress span {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  transition:
+    width 300ms ease,
+    background 300ms ease;
+}
+
+.intro-progress span.active {
+  width: 22px;
+  border-radius: 999px;
+  background: rgba(240, 229, 218, 0.8);
+}
+
+.intro-instruction {
+  justify-self: end;
+  color: rgba(220, 208, 197, 0.34);
+  font-family: "DM Sans", sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+/* ---------------------------------------------------------
+   Animations
+   --------------------------------------------------------- */
+
+@keyframes shotIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes fragmentAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+    filter: blur(5px);
+  }
+
+  100% {
+    opacity: 0.72;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes fragmentFloat {
+  from {
+    margin-top: -3px;
+  }
+
+  to {
+    margin-top: 5px;
+  }
+}
+
+@keyframes trailReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes finalLineReveal {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes logoReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+    letter-spacing: 0.22em;
+    filter: blur(12px);
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    letter-spacing: 0.08em;
+    filter: blur(0);
+  }
+}
+
+@keyframes subtitleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoLight {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+}
+
+@keyframes numberReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes lineGrow {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+
+  to {
+    width: 90px;
+    opacity: 1;
+  }
+}
+
+@keyframes insightReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lightFloatOne {
+  from {
+    transform: translate3d(-20px, -10px, 0);
+  }
+
+  to {
+    transform: translate3d(35px, 25px, 0);
+  }
+}
+
+@keyframes lightFloatTwo {
+  from {
+    transform: translate3d(15px, 10px, 0);
+  }
+
+  to {
+    transform: translate3d(-30px, -25px, 0);
+  }
+}
+
+@keyframes grainMove {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  25% {
+    transform: translate(2%, -1%);
+  }
+
+  50% {
+    transform: translate(-1%, 2%);
+  }
+
+  75% {
+    transform: translate(1%, 1%);
+  }
+
+  100% {
+    transform: translate(-2%, -2%);
+  }
+}
+
+/* ---------------------------------------------------------
+   Mobile
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+  .intro-content {
+    width: min(92%, 600px);
+  }
+
+  .intro-shot h1 {
+    font-size: clamp(2.7rem, 12vw, 4.5rem);
+  }
+
+  .intro-shot p {
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  .business-fragments span {
+    font-size: 9px;
+  }
+
+  .fragment-one {
+    left: 8%;
+  }
+
+  .fragment-two {
+    right: 8%;
+  }
+
+  .fragment-three {
+    left: 7%;
+  }
+
+  .fragment-four {
+    right: 7%;
+  }
+
+  .fragment-five {
+    right: 25%;
+  }
+
+  .fragment-seven {
+    left: 5%;
+  }
+
+  .fragment-eight {
+    right: 5%;
+  }
+
+  .opening-final-line {
+    bottom: 35%;
+    font-size: 8px;
+    letter-spacing: 0.16em;
+  }
+
+  .intro-number {
+    transform: scale(0.85);
+  }
+
+  .sales-number {
+    top: 16%;
+    left: 7%;
+  }
+
+  .expense-number {
+    top: 26%;
+    right: 7%;
+  }
+
+  .profit-number {
+    bottom: 25%;
+    left: 8%;
+  }
+
+  .intro-insight {
+    right: 6%;
+    bottom: 15%;
+    width: min(280px, 72vw);
+    padding: 16px;
+  }
+
+  .intro-bottom {
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    grid-template-columns: auto 1fr;
+  }
+
+  .intro-progress {
+    justify-content: flex-end;
+  }
+
+  .intro-instruction {
+    display: none;
+  }
+
+  .intro-top-controls {
+    top: 20px;
+    right: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lumora-intro *,
+  .lumora-intro *::before,
+  .lumora-intro *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
