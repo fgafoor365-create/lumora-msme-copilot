@@ -217,6 +217,14 @@
 .lm-label.terra {
   color: var(--lm-terra);
 }
+html[lang="te"] .lm-label,
+html[lang="hi"] .lm-label,
+html[lang="ur"] .lm-label {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  letter-spacing: 0;
+}
 .lm-pill-btn {
   display: inline-flex;
   align-items: center;
@@ -611,6 +619,7 @@ button.lm-card:hover {
 }
 .lm-action {
   display: flex;
+  min-width: 0;
   min-height: 170px;
   flex-direction: column;
   align-items: flex-start;
@@ -621,6 +630,7 @@ button.lm-card:hover {
   background: var(--lm-card);
   color: var(--text);
   text-align: left;
+  overflow-wrap: anywhere;
   transition: transform 160ms ease, box-shadow 160ms ease;
 }
 .lm-action:hover {
@@ -648,11 +658,13 @@ button.lm-card:hover {
   color: #f0c9b6;
 }
 .lm-action strong {
+  max-width: 100%;
   font-family: var(--heading);
   font-size: 17px;
   line-height: 1.25;
 }
 .lm-action small {
+  max-width: 100%;
   color: var(--text-secondary);
   font-size: 13px;
   line-height: 1.45;
@@ -1446,5 +1458,240 @@ p.lm-errors {
   .lm-ring .fill {
     animation: none;
     transition: none;
+  }
+}
+
+/* Floating language menu */
+.lm-language {
+  position: fixed;
+  right: 18px;
+  bottom: 88px;
+  z-index: 100;
+  font-family: inherit;
+}
+
+.lm-language-trigger {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 15px;
+  border: 1px solid rgba(184, 111, 80, 0.35);
+  border-radius: 999px;
+  background: #fffaf5;
+  color: #573b30;
+  box-shadow: 0 5px 20px rgba(45, 30, 20, 0.14);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lm-language-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 9px);
+  display: grid;
+  gap: 4px;
+  min-width: 155px;
+  padding: 7px;
+  border: 1px solid rgba(184, 111, 80, 0.2);
+  border-radius: 14px;
+  background: #fffaf5;
+  box-shadow: 0 8px 28px rgba(45, 30, 20, 0.16);
+}
+
+.lm-language-menu button {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #573b30;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lm-language-menu button:hover,
+.lm-language-menu button.selected {
+  background: #f3e3d8;
+}
+
+.lm-language button:focus-visible {
+  outline: 2px solid #b86f50;
+  outline-offset: 3px;
+}
+
+/* Urdu page flow. Numeric fields and chart geometry keep their native direction. */
+html[dir='rtl'] .lm-app,
+html[dir='rtl'] .lm-tutorial {
+  direction: rtl;
+}
+
+html[dir='rtl'] .lm-input:not([inputmode='numeric']),
+html[dir='rtl'] textarea {
+  text-align: right;
+}
+
+html[dir='rtl'] .lm-input[inputmode='numeric'],
+html[dir='rtl'] .lm-amount input,
+html[dir='rtl'] .lm-chart,
+html[dir='rtl'] .lm-bars {
+  direction: ltr;
+}
+
+html[dir='rtl'] .lm-language-menu button {
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .lm-language {
+    right: 12px;
+    bottom: 82px;
+  }
+}
+
+/* First-time Lumora tutorial */
+.lm-tutorial-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(35, 27, 23, 0.58);
+  backdrop-filter: blur(5px);
+}
+
+.lm-tutorial {
+  position: relative;
+  width: min(100%, 430px);
+  padding: 30px;
+  border: 1px solid rgba(184, 111, 80, 0.2);
+  border-radius: 24px;
+  background: #fffaf5;
+  color: #573b30;
+  box-shadow: 0 24px 80px rgba(20, 14, 10, 0.25);
+  text-align: center;
+}
+
+.lm-tutorial-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #f3e8df;
+  color: #573b30;
+  cursor: pointer;
+}
+
+.lm-tutorial-icon {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  margin: 8px auto 22px;
+  place-items: center;
+  border-radius: 22px;
+  background: #f3e3d8;
+  font-size: 36px;
+}
+
+.lm-tutorial-kicker {
+  color: #a66a4e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.lm-tutorial h2 {
+  margin: 12px 0;
+  font-size: clamp(23px, 5vw, 29px);
+  line-height: 1.2;
+}
+
+.lm-tutorial-description {
+  min-height: 66px;
+  margin: 0;
+  color: #79665c;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.lm-tutorial-dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin: 24px 0;
+}
+
+.lm-tutorial-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 10px;
+  background: #e5d5ca;
+}
+
+.lm-tutorial-dots span.active {
+  width: 22px;
+  background: #b86f50;
+}
+
+.lm-tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lm-tutorial-back,
+.lm-tutorial-next {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lm-tutorial-back {
+  border: 1px solid #e5d5ca;
+  background: transparent;
+  color: #573b30;
+}
+
+.lm-tutorial-back:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.lm-tutorial-next {
+  flex: 1;
+  border: 0;
+  background: #b86f50;
+  color: white;
+}
+
+.lm-tutorial-skip {
+  margin-top: 17px;
+  border: 0;
+  background: transparent;
+  color: #8c776b;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.lm-tutorial button:focus-visible {
+  outline: 2px solid #b86f50;
+  outline-offset: 3px;
+}
+
+@media (max-width: 420px) {
+  .lm-tutorial {
+    padding: 24px 20px;
   }
 }

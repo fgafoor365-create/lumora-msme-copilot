@@ -37,7 +37,7 @@ export type SavingsGoal = {
   contributions: Contribution[]
 }
 
-export type Page = 'home' | 'checkup' | 'history' | 'calendar' | 'copilot' | 'pending' | 'piggy'
+export type Page = 'home' | 'checkup' | 'history' | 'calendar' | 'copilot' | 'pending' | 'piggy' | 'scan'
 export type Tone = 'good' | 'warn' | 'info'
 
 export type Fact = { label: string; value: string; strong?: boolean }

@@ -3,6 +3,7 @@ import type { SavingsGoal } from '../types'
 import { goalEstimate, goalPace, goalProgress, goalRemaining, savedInLastDays } from '../lib/calc'
 import { fmtDay, fmtINR, fmtShort, toNumber } from '../lib/utils'
 import { AmountField } from './ui'
+import { useI18n } from '../lib/i18n'
 
 type Props = {
   goals: SavingsGoal[]
@@ -34,6 +35,7 @@ function Ring({ percent }: { percent: number }) {
 }
 
 function GoalCard({ goal, onContribute }: { goal: SavingsGoal; onContribute: Props['onContribute'] }) {
+  const { t } = useI18n()
   const [amount, setAmount] = useState('')
   const [error, setError] = useState('')
   const progress = goalProgress(goal)
@@ -46,7 +48,7 @@ function GoalCard({ goal, onContribute }: { goal: SavingsGoal; onContribute: Pro
 
   const add = () => {
     const n = toNumber(amount)
-    if (n <= 0) return setError('Add an amount to set aside.')
+    if (n <= 0) return setError(t('enterValidAmount'))
     onContribute(goal.id, n)
     setAmount('')
     setError('')
@@ -65,19 +67,19 @@ function GoalCard({ goal, onContribute }: { goal: SavingsGoal; onContribute: Pro
 
       <dl className="lm-detail-list">
         <div>
-          <dt>Remaining</dt>
+      <dt>{t('remainingAmount')}</dt>
           <dd>{fmtINR(goalRemaining(goal))}</dd>
         </div>
         <div>
-          <dt>Current pace</dt>
-          <dd>{pace ? `${fmtINR(pace)} / month` : 'Not enough history yet'}</dd>
+      <dt>{t('currentPace')}</dt>
+      <dd>{pace ? `${fmtINR(pace)} ${t('monthUnit')}` : t('notEnoughHistory')}</dd>
         </div>
         <div>
-          <dt>Estimated time</dt>
+      <dt>{t('estimatedTime')}</dt>
           <dd>{est.text}</dd>
         </div>
       </dl>
-      <p className="lm-footnote">Estimates simply follow your pace. They’re not promises, and they shift as you save.</p>
+      <p className="lm-footnote">{t('estimateNote')}</p>
 
       {behind && (
         <p className="lm-gentle">
@@ -89,13 +91,13 @@ function GoalCard({ goal, onContribute }: { goal: SavingsGoal; onContribute: Pro
         <div className="lm-sub">
           <AmountField
             id={`add-${goal.id}`}
-            label="Set something aside"
+            label={t('contributionAmount')}
             value={amount}
             onChange={setAmount}
             chips={[500, 1000, 2000, 5000]}
           />
           {error && <p className="lm-errors" role="alert">{error}</p>}
-          <button type="button" className="lm-btn primary" onClick={add}>Add to {goal.name}</button>
+          <button type="button" className="lm-btn primary" onClick={add}>{t('contribute', { name: goal.name })}</button>
         </div>
       )}
 
@@ -114,6 +116,7 @@ function GoalCard({ goal, onContribute }: { goal: SavingsGoal; onContribute: Pro
 }
 
 export default function PiggyPage({ goals, onAddGoal, onContribute }: Props) {
+  const { t } = useI18n()
   const [showForm, setShowForm] = useState(goals.length === 0)
   const [name, setName] = useState('')
   const [target, setTarget] = useState('')
@@ -139,19 +142,19 @@ export default function PiggyPage({ goals, onAddGoal, onContribute }: Props) {
     <div className="lm-stack">
       <section className="lm-hero compact">
         <div>
-          <span className="lm-label terra">PIGGY BANK</span>
-          <h2>Savings, separate from the business.</h2>
-          <p>Goals for you and your business. Calm and at your own pace.</p>
+          <span className="lm-label terra">{t('piggy')}</span>
+          <h2>{t('createSavingsGoal')}</h2>
+          <p>{t('smallRecords')}</p>
         </div>
         <button type="button" className="lm-btn ghost" onClick={() => setShowForm((v) => !v)} aria-expanded={showForm}>
-          {showForm ? 'Close' : 'New goal'}
+          {showForm ? t('close') : t('createGoal')}
         </button>
       </section>
 
       {showForm && (
         <section className="lm-card lm-form">
-          <h3>What are you saving for?</h3>
-          <div className="lm-chips left wrap" role="group" aria-label="Goal ideas">
+          <h3>{t('goalName')}</h3>
+          <div className="lm-chips left wrap" role="group" aria-label={t('createGoal')}>
             {PRESETS.map((p) => (
               <button key={p} type="button" className={`lm-chip ${name === p ? 'on' : ''}`} onClick={() => setName(p)}>
                 {p}
@@ -159,14 +162,14 @@ export default function PiggyPage({ goals, onAddGoal, onContribute }: Props) {
             ))}
           </div>
           <div className="lm-field">
-            <label htmlFor="goal-name" className="lm-field-label">Or type your own</label>
+            <label htmlFor="goal-name" className="lm-field-label">{t('goalName')}</label>
             <input id="goal-name" className="lm-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. New scooter" autoComplete="off" />
           </div>
-          <AmountField id="goal-target" label="Target amount" value={target} onChange={setTarget} chips={[25000, 50000, 100000, 200000]} />
-          <AmountField id="goal-start" label="Already saved (optional)" value={startSaved} onChange={setStartSaved} />
-          <AmountField id="goal-monthly" label="Monthly amount you plan to set aside (optional)" value={monthly} onChange={setMonthly} chips={[2000, 5000, 10000]} />
+          <AmountField id="goal-target" label={t('targetAmount')} value={target} onChange={setTarget} chips={[25000, 50000, 100000, 200000]} />
+          <AmountField id="goal-start" label={t('savedWord')} value={startSaved} onChange={setStartSaved} />
+          <AmountField id="goal-monthly" label={t('currentPace')} value={monthly} onChange={setMonthly} chips={[2000, 5000, 10000]} />
           {error && <p className="lm-errors" role="alert">{error}</p>}
-          <button type="button" className="lm-btn primary block" onClick={create}>Create goal</button>
+          <button type="button" className="lm-btn primary block" onClick={create}>{t('createGoal')}</button>
         </section>
       )}
 

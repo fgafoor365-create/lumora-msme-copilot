@@ -1,5 +1,6 @@
 import type { Insight } from '../types'
-import { fmtShort, pctChange } from '../lib/utils'
+import { decodeHtmlEntities, fmtShort, pctChange } from '../lib/utils'
+import { useI18n } from '../lib/i18n'
 
 export function InsightCard({
   insight,
@@ -8,6 +9,7 @@ export function InsightCard({
   insight: Insight
   onAsk?: (question: string) => void
 }) {
+  const { t } = useI18n()
   const mark = insight.tone === 'good' ? '↑' : insight.tone === 'warn' ? '!' : 'i'
   return (
     <article className={`lm-insight ${insight.tone}`}>
@@ -30,11 +32,11 @@ export function InsightCard({
           </dl>
         )}
 
-        {insight.note && <p className="lm-insight-note">Your note: “{insight.note}”</p>}
+        {insight.note && <p className="lm-insight-note">{t('dashYourNote', { note: decodeHtmlEntities(insight.note) })}</p>}
 
         {onAsk && (
           <button type="button" className="lm-link" onClick={() => onAsk(insight.question)}>
-            Understand this with Lumora →
+            {t('understandWithLumora')} →
           </button>
         )}
       </div>
@@ -125,9 +127,10 @@ export function Delta({
   hasPrev: boolean
   upIsGood?: boolean
 }) {
+  const { t } = useI18n()
   if (!hasPrev) return null
   const d = cur - prev
-  if (Math.round(d) === 0) return <span className="lm-delta flat">no change</span>
+  if (Math.round(d) === 0) return <span className="lm-delta flat">{t('dashNoChange')}</span>
   const p = pctChange(cur, prev)
   const text = p !== null ? `${Math.abs(Math.round(p))}%` : fmtShort(Math.abs(d))
   const good = upIsGood ? d > 0 : d < 0

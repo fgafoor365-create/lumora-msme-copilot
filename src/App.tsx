@@ -1,7 +1,8 @@
-import Shell from "./components/Shell"
 
+import Shell from './components/Shell'
 import { useEffect, useState } from 'react'
 import LumoraIntro from './components/LumoraIntro'
+import { persistBusiness } from './lib/store'
 import './App.css'
 
 type AnswerValue = string | string[]
@@ -41,8 +42,8 @@ const onboardingSteps: OnboardingStep[] = [
     options: [
       'Just starting',
       'Less than 1 year',
-      '1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“3 years',
-      '3ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“5 years',
+      '1–3 years',
+      '3–5 years',
       '5+ years',
     ],
   },
@@ -149,12 +150,10 @@ function App() {
   }
 
   const handleChallengeOption = (option: string) => {
-    if (option === 'Something else') {
-      handleSingleAnswer(option)
-      return
+    if (option !== 'Something else') {
+      setCustomChallenge('')
     }
 
-    setCustomChallenge('')
     handleSingleAnswer(option)
   }
 
@@ -169,8 +168,10 @@ function App() {
   }
 
   const hasValidAnswer = (): boolean => {
-    if (currentQuestion.key === 'challenge' &&
-        currentAnswer === 'Something else') {
+    if (
+      currentQuestion.key === 'challenge' &&
+      currentAnswer === 'Something else'
+    ) {
       return Boolean(customChallenge.trim())
     }
 
@@ -178,20 +179,24 @@ function App() {
       return currentAnswer.length > 0
     }
 
-    return Boolean(
-      typeof currentAnswer === 'string' && currentAnswer.trim(),
-    )
+    return typeof currentAnswer === 'string' && Boolean(currentAnswer.trim())
   }
 
   const nextOnboardingStep = () => {
     if (!hasValidAnswer()) return
 
-    if (currentQuestion.key === 'challenge' &&
-        currentAnswer === 'Something else') {
-      setAnswers((previous) => ({
-        ...previous,
+    let completedAnswers = answers
+
+    if (
+      currentQuestion.key === 'challenge' &&
+      currentAnswer === 'Something else'
+    ) {
+      completedAnswers = {
+        ...answers,
         challenge: customChallenge.trim(),
-      }))
+      }
+
+      setAnswers(completedAnswers)
     }
 
     if (onboardingStep < onboardingSteps.length - 1) {
@@ -199,8 +204,13 @@ function App() {
       return
     }
 
-    writeStorage('lumora_onboarding_complete', 'true')
-    setShowOnboarding(false)
+    try {
+      persistBusiness(completedAnswers)
+      writeStorage('lumora_onboarding_complete', 'true')
+      setShowOnboarding(false)
+    } catch (error) {
+      console.error('Could not save the business profile:', error)
+    }
   }
 
   const previousOnboardingStep = () => {
@@ -243,8 +253,9 @@ function App() {
         <section className="onboarding-content">
           <div className="onboarding-question">
             <span className="onboarding-eyebrow">
-              LET'S GET TO KNOW YOUR BUSINESS
+              LET&apos;S GET TO KNOW YOUR BUSINESS
             </span>
+
             <h1>{currentQuestion.question}</h1>
             <p>{currentQuestion.subtitle}</p>
           </div>
@@ -278,7 +289,9 @@ function App() {
                     <button
                       key={option}
                       type="button"
-                      className={`onboarding-option ${selected ? 'selected' : ''}`}
+                      className={`onboarding-option ${
+                        selected ? 'selected' : ''
+                      }`}
                       onClick={() => {
                         if (isMultiSelect) {
                           handleMultiAnswer(option)
@@ -290,8 +303,9 @@ function App() {
                       }}
                     >
                       <span>{option}</span>
-                      <span className="option-check">
-                        {selected ? 'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“' : isMultiSelect ? '+' : 'ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢'}
+
+                      <span className="option-check" aria-hidden="true">
+                        {selected ? '✓' : isMultiSelect ? '+' : '›'}
                       </span>
                     </button>
                   )
@@ -329,7 +343,7 @@ function App() {
               onClick={previousOnboardingStep}
               disabled={onboardingStep === 0}
             >
-              ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back
+              ← Back
             </button>
 
             <button
@@ -339,8 +353,8 @@ function App() {
               disabled={!hasValidAnswer()}
             >
               {onboardingStep === onboardingSteps.length - 1
-                ? 'Finish ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢'
-                : 'Continue ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢'}
+                ? 'Finish →'
+                : 'Continue →'}
             </button>
           </div>
         </section>

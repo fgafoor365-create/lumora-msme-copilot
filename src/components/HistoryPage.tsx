@@ -22,31 +22,52 @@ import {
   todayStr,
 } from '../lib/utils'
 import { Delta, EmptyState } from './ui'
+import { useI18n } from '../lib/i18n'
+import { translate, type LumoraLanguage } from '../lib/i18n'
 
 type Range = 'today' | 'week' | 'month' | 'year'
 
 const RANGES: { id: Range; label: string; days: number; title: string; prev: string }[] = [
-  { id: 'today', label: 'Today', days: 1, title: 'Today', prev: 'yesterday' },
-  { id: 'week', label: 'Week', days: 7, title: 'Last 7 days', prev: 'the 7 days before' },
-  { id: 'month', label: 'Month', days: 30, title: 'Last 30 days', prev: 'the 30 days before' },
-  { id: 'year', label: 'Year', days: 365, title: 'Last 12 months', prev: 'the year before' },
+  { id: 'today', label: 'today', days: 1, title: 'today', prev: 'yesterday' },
+  { id: 'week', label: 'week', days: 7, title: 'last7Days', prev: 'the 7 days before' },
+  { id: 'month', label: 'month', days: 30, title: 'last30Days', prev: 'the 30 days before' },
+  { id: 'year', label: 'year', days: 365, title: 'last12Months', prev: 'the year before' },
 ]
 
 type Bucket = { label: string; sales: number; expenses: number; tip: string }
 
-function buildBuckets(range: Range, records: DailyRecord[], from: string, end: string): Bucket[] {
+function buildBuckets(range: Range, records: DailyRecord[], from: string, end: string, language: LumoraLanguage): Bucket[] {
   if (range === 'today') return []
+  
   if (range === 'year') {
     const map = new Map<string, Bucket>()
-    for (const r of records) {
-      const key = r.date.slice(0, 7)
-      const b = map.get(key) ?? { label: fmtMonthShort(r.date), sales: 0, expenses: 0, tip: '' }
-      b.sales += r.sales
-      b.expenses += r.expenses
-      b.tip = `${fmtMonthShort(r.date)}: sales ${fmtShort(b.sales)}, expenses ${fmtShort(b.expenses)}`
-      map.set(key, b)
+
+    // Create all 12 months, even when there are no records.
+    for (let offset = 11; offset >= 0; offset--) {
+      const date = addDays(end, -offset * 30)
+      const key = date.slice(0, 7)
+      const monthDate = `${key}-01`
+
+      map.set(key, {
+        label: fmtMonthShort(monthDate),
+        sales: 0,
+        expenses: 0,
+        tip: `${fmtMonthShort(monthDate)}: ${translate(language, 'noRecord')}`,
+      })
     }
-    return [...map.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, b]) => b)
+
+    for (const record of records) {
+      const key = record.date.slice(0, 7)
+      const bucket = map.get(key)
+
+      if (!bucket) continue
+
+      bucket.sales += record.sales
+      bucket.expenses += record.expenses
+      bucket.tip = `${bucket.label}: ${translate(language, 'sales')} ${fmtShort(bucket.sales)}, ${translate(language, 'expenses')} ${fmtShort(bucket.expenses)}`
+    }
+
+    return [...map.values()]
   }
   const byDate = new Map(records.map((r) => [r.date, r]))
   const out: Bucket[] = []
@@ -57,25 +78,25 @@ function buildBuckets(range: Range, records: DailyRecord[], from: string, end: s
       label,
       sales: r?.sales ?? 0,
       expenses: r?.expenses ?? 0,
-      tip: r ? `${fmtDay(d)}: sales ${fmtShort(r.sales)}, expenses ${fmtShort(r.expenses)}` : `${fmtDay(d)}: no record`,
+      tip: r ? `${fmtDay(d)}: ${translate(language, 'sales')} ${fmtShort(r.sales)}, ${translate(language, 'expenses')} ${fmtShort(r.expenses)}` : `${fmtDay(d)}: ${translate(language, 'noRecord')}`,
     })
   }
   return out
 }
 
-function Chart({ buckets, range }: { buckets: Bucket[]; range: Range }) {
+function Chart({ buckets, range, language }: { buckets: Bucket[]; range: Range; language: LumoraLanguage }) {
   const max = Math.max(1, ...buckets.flatMap((b) => [b.sales, b.expenses]))
   const step = range === 'month' ? 5 : 1
   return (
     <div>
       <div className="lm-legend">
-        <span><i className="s" /> Sales</span>
-        <span><i className="e" /> Expenses</span>
+        <span><i className="s" /> {translate(language, 'sales')}</span>
+        <span><i className="e" /> {translate(language, 'expenses')}</span>
       </div>
       <div
         className={`lm-chart ${range}`}
         role="img"
-        aria-label="Sales and expenses over time. Use the numbers below for exact values."
+        aria-label={`${translate(language, 'salesExpenses')}. ${translate(language, 'basedOnRecords')}.`}
       >
         {buckets.map((b, i) => (
           <div key={`${b.label}-${i}`} className="lm-chart-col" title={b.tip}>
@@ -100,6 +121,7 @@ export default function HistoryPage({
   pending: PendingPayment[]
   onNavigate: (page: Page, question?: string) => void
 }) {
+  const { t: tr, language } = useI18n()
   const [range, setRange] = useState<Range>('week')
   const cfg = RANGES.find((r) => r.id === range) ?? RANGES[1]
   const end = todayStr()
@@ -113,12 +135,12 @@ export default function HistoryPage({
   const best = bestSalesDay(cur)
   const worst = highestExpenseDay(cur)
   const avgProfit = t.days ? t.profit / t.days : 0
-  const buckets = buildBuckets(range, cur, curFrom, end)
+  const buckets = buildBuckets(range, cur, curFrom, end, language)
   const recent = [...cur].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 7)
 
   return (
     <div className="lm-stack">
-      <div className="lm-seg" role="tablist" aria-label="Time range">
+      <div className="lm-seg" role="tablist" aria-label={tr('historyRange')}>
         {RANGES.map((r) => (
           <button
             key={r.id}
@@ -128,16 +150,16 @@ export default function HistoryPage({
             className={range === r.id ? 'on' : ''}
             onClick={() => setRange(r.id)}
           >
-            {r.label}
+            {tr(r.label as 'today' | 'week' | 'month' | 'year')}
           </button>
         ))}
       </div>
 
       {cur.length === 0 ? (
         <EmptyState
-          title={range === 'today' ? 'Nothing recorded today yet' : 'No records in this period'}
-          body="Record your numbers in Today’s Check-up and they’ll show up here."
-          actionLabel="Record today"
+          title={range === 'today' ? tr('nothingRecordedToday') : tr('noRecordPeriod')}
+          body={tr('recordInCheckup')}
+          actionLabel={tr('recordToday')}
           onAction={() => onNavigate('checkup')}
         />
       ) : (
@@ -145,9 +167,9 @@ export default function HistoryPage({
           <section className="lm-card">
             <div className="lm-card-head">
               <div>
-                <span className="lm-label">{cfg.title.toUpperCase()}</span>
+                <span className="lm-label">{tr(cfg.title as 'today' | 'last7Days' | 'last30Days' | 'last12Months').toUpperCase()}</span>
                 <h3>
-                  {fmtINR(t.profit)} <span className="lm-soft">estimated profit</span>
+                  {fmtINR(t.profit)} <span className="lm-soft">{tr('estimatedProfitLabel')}</span>
                 </h3>
               </div>
               <Delta cur={t.profit} prev={pt.profit} hasPrev={hasPrev} />
@@ -155,47 +177,47 @@ export default function HistoryPage({
 
             <div className="lm-metric-grid">
               <div>
-                <span>Sales</span>
+                <span>{tr('sales')}</span>
                 <strong>{fmtINR(t.sales)}</strong>
                 <Delta cur={t.sales} prev={pt.sales} hasPrev={hasPrev} />
               </div>
               <div>
-                <span>Expenses</span>
+                <span>{tr('expenses')}</span>
                 <strong>{fmtINR(t.expenses)}</strong>
                 <Delta cur={t.expenses} prev={pt.expenses} hasPrev={hasPrev} upIsGood={false} />
               </div>
               <div>
-                <span>Pending now</span>
+                <span>{tr('pendingNow')}</span>
                 <strong>{fmtINR(totalRemaining(pending))}</strong>
                 <button type="button" className="lm-link small" onClick={() => onNavigate('pending')}>
-                  View →
+                  {tr('view')} →
                 </button>
               </div>
             </div>
-            {hasPrev && <p className="lm-footnote">Changes compare with {cfg.prev}.</p>}
+            {hasPrev && <p className="lm-footnote">{tr('changesCompare', { period: cfg.prev })}</p>}
           </section>
 
           {buckets.length > 1 && (
             <section className="lm-card">
               <div className="lm-card-head">
-                <h3>Sales and expenses</h3>
+                <h3>{tr('salesExpenses')}</h3>
               </div>
-              <Chart buckets={buckets} range={range} />
+              <Chart buckets={buckets} range={range} language={language} />
             </section>
           )}
 
           <section className="lm-card">
             <div className="lm-card-head">
-              <h3>The details</h3>
+              <h3>{tr('details')}</h3>
             </div>
             <dl className="lm-detail-list">
               <div>
-                <dt>Average daily profit</dt>
+              <dt>{tr('averageDailyProfit')}</dt>
                 <dd>{fmtINR(avgProfit)}</dd>
               </div>
               {best && (
                 <div>
-                  <dt>Strongest sales day</dt>
+                    <dt>{tr('strongestSalesDay')}</dt>
                   <dd>
                     {fmtINR(best.sales)} <small>{fmtWeekday(best.date)}, {fmtDay(best.date)}</small>
                   </dd>
@@ -203,14 +225,14 @@ export default function HistoryPage({
               )}
               {worst && (
                 <div>
-                  <dt>Highest-expense day</dt>
+                    <dt>{tr('highestExpenseDay')}</dt>
                   <dd>
                     {fmtINR(worst.expenses)} <small>{fmtWeekday(worst.date)}, {fmtDay(worst.date)}</small>
                   </dd>
                 </div>
               )}
               <div>
-                <dt>Pending payment change</dt>
+                <dt>{tr('pendingChange')}</dt>
                 <dd>
                   {fmtSigned(flow.net)}{' '}
                   <small>
@@ -225,7 +247,7 @@ export default function HistoryPage({
           {range !== 'year' && (
             <section className="lm-card">
               <div className="lm-card-head">
-                <h3>Day by day</h3>
+              <h3>{tr('dayByDay')}</h3>
               </div>
               <ul className="lm-day-list">
                 {recent.map((r) => (
@@ -247,7 +269,7 @@ export default function HistoryPage({
           )}
 
           <button type="button" className="lm-btn ghost block" onClick={() => onNavigate('copilot', 'What changed this week?')}>
-            Ask Copilot what changed
+          {tr('askCopilotChanges')}
           </button>
         </>
       )}

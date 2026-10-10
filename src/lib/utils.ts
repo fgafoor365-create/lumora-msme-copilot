@@ -14,6 +14,20 @@ export function fmtINR(value: number): string {
   }).format(Number.isFinite(value) ? value : 0);
 }
 
+export function decodeHtmlEntities(value: string): string {
+  return value.replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos);/gi, (entity, code: string) => {
+    if (code[0] !== '#') {
+      const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" }
+      return named[code.toLowerCase()] ?? entity
+    }
+    const radix = code[1]?.toLowerCase() === 'x' ? 16 : 10
+    const digits = radix === 16 ? code.slice(2) : code.slice(1)
+    const point = Number.parseInt(digits, radix)
+    if (!Number.isInteger(point) || point < 0 || point > 0x10ffff || (point >= 0xd800 && point <= 0xdfff)) return entity
+    return String.fromCodePoint(point)
+  })
+}
+
 export function fmtShort(value: number): string {
   const n = Number.isFinite(value) ? value : 0;
   if (Math.abs(n) >= 100000) return `₹${(n / 100000).toFixed(1)}L`;
@@ -67,8 +81,8 @@ export function dayOfWeek(value: string): number {
   return parseDate(value).getDay();
 }
 
-export function fmtDay(value: string): string {
-  return parseDate(value).toLocaleDateString("en-IN", {
+export function fmtDay(value: string, locale = "en-IN"): string {
+  return parseDate(value).toLocaleDateString(locale, {
     day: "numeric",
     month: "short",
   });

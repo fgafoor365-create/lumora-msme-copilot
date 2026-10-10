@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Send } from 'lucide-react'
 import type { ChatMessage, CopilotAnswer, Insight, Page } from '../types'
 import { suggestedQuestions } from '../lib/copilot'
+import { useI18n } from '../lib/i18n'
 
 type Props = {
   messages: ChatMessage[]
@@ -19,17 +20,18 @@ function AnswerCard({
   onAsk: (q: string) => void
   onNavigate: (page: Page) => void
 }) {
+  const { t } = useI18n()
   const action = answer.action
   return (
     <div className="lm-answer">
       <div className="lm-answer-block">
-        <span className="lm-label terra">WHAT I NOTICED</span>
+        <span className="lm-label terra">{t('whatNoticed')}</span>
         <p className="lead">{answer.noticed}</p>
       </div>
 
       {answer.why && (
         <div className="lm-answer-block">
-          <span className="lm-label">{answer.insufficient ? 'WHAT HELPS' : 'WHY IT MATTERS'}</span>
+          <span className="lm-label">{answer.insufficient ? t('whatCanDo') : t('understandNumbers')}</span>
           <p>{answer.why}</p>
           {answer.extra && <p className="lm-answer-extra">{answer.extra}</p>}
         </div>
@@ -37,7 +39,7 @@ function AnswerCard({
 
       {answer.numbers && answer.numbers.length > 0 && (
         <div className="lm-answer-block">
-          <span className="lm-label">THE NUMBERS</span>
+          <span className="lm-label">{t('numbers')}</span>
           <div className="lm-numbers">
             {answer.numbers.map((n) => (
               <div key={n.label} className="lm-num">
@@ -52,7 +54,7 @@ function AnswerCard({
 
       {action && (
         <div className="lm-answer-block">
-          <span className="lm-label">WHAT YOU CAN DO</span>
+          <span className="lm-label">{t('whatCanDo')}</span>
           {action.detail && <p>{action.detail}</p>}
           <button type="button" className="lm-btn primary" onClick={() => onNavigate(action.page)}>
             {action.label} →
@@ -61,7 +63,7 @@ function AnswerCard({
       )}
 
       {answer.followUps.length > 0 && (
-        <div className="lm-chips left" role="group" aria-label="Follow-up questions">
+        <div className="lm-chips left" role="group" aria-label={t('followUp')}>
           {answer.followUps.map((q) => (
             <button key={q} type="button" className="lm-chip" onClick={() => onAsk(q)}>
               {q}
@@ -74,6 +76,7 @@ function AnswerCard({
 }
 
 export default function CopilotPage({ messages, topInsight, onAsk, onNavigate }: Props) {
+  const { t } = useI18n()
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
 
@@ -95,24 +98,24 @@ export default function CopilotPage({ messages, topInsight, onAsk, onNavigate }:
             <section className="lm-hero compact">
               <div>
                 <span className="lm-label terra">COPILOT</span>
-                <h2>Ask about your business.</h2>
-                <p>Answers come from the numbers you’ve recorded. Lumora won’t guess.</p>
+                <h2>{t('copilotHeadline')}</h2>
+                <p>{t('copilotDisclaimer')}</p>
               </div>
             </section>
 
             {topInsight && topInsight.id !== 'getting-started' && (
               <section className="lm-card lm-noticed">
-                <span className="lm-label terra">LUMORA NOTICED</span>
+                <span className="lm-label terra">{t('whatNoticed')}</span>
                 <h3>{topInsight.title}</h3>
                 <button type="button" className="lm-link" onClick={() => onAsk(topInsight.question)}>
-                  Explain this →
+                  {t('understandWithLumora')} →
                 </button>
               </section>
             )}
 
             <section>
               <div className="lm-section-head">
-                <span className="lm-label">TRY ASKING</span>
+                <span className="lm-label">{t('followUp')}</span>
               </div>
               <div className="lm-chips left wrap">
                 {suggestedQuestions.map((q) => (
@@ -145,16 +148,16 @@ export default function CopilotPage({ messages, topInsight, onAsk, onNavigate }:
         }}
       >
         <label htmlFor="copilot-input" className="lm-sr">
-          Ask Lumora a question
+          {t('copilotHeadline')}
         </label>
         <input
           id="copilot-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about sales, expenses, profit, pending…"
+          placeholder={t('copilotHeadline')}
           autoComplete="off"
         />
-        <button type="submit" className="lm-send" aria-label="Send" disabled={!input.trim()}>
+        <button type="submit" className="lm-send" aria-label={t('send')} disabled={!input.trim()}>
           <Send size={18} aria-hidden="true" />
         </button>
       </form>

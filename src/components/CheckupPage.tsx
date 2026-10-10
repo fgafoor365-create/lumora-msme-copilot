@@ -3,6 +3,7 @@ import type { CheckupInput, DailyRecord, Insight, Page, PendingPayment } from '.
 import { openPayments, remainingOf, sortByDate } from '../lib/calc'
 import { fmtINR, margin, toNumber, todayStr } from '../lib/utils'
 import { AmountField, InsightCard } from './ui'
+import { useI18n } from '../lib/i18n'
 
 type Props = {
   records: DailyRecord[]
@@ -26,6 +27,7 @@ function chipsFor(t: number | null, fallback: number[]): number[] {
 }
 
 export default function CheckupPage({ records, pending, insights, onSave, onNavigate }: Props) {
+  const { t } = useI18n()
   const existing = records.find((r) => r.date === todayStr())
   const open = openPayments(pending)
 
@@ -78,31 +80,31 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
     return (
       <div className="lm-stack">
         <section className="lm-card lm-saved">
-          <span className="lm-label terra">SAVED</span>
-          <h2>Thanks. Lumora has the picture for today.</h2>
+          <span className="lm-label terra">{t('saved')}</span>
+          <h2>{t('thanksPicture')}</h2>
           <div className="lm-profit">
-            <span>Estimated profit</span>
+            <span>{t('estimatedProfit')}</span>
             <strong className={profit < 0 ? 'neg' : ''}>{fmtINR(profit)}</strong>
-            <small>{s > 0 ? `${Math.round(pct)}% margin on ${fmtINR(s)} sales` : 'No sales recorded today'}</small>
+            <small>{s > 0 ? `${Math.round(pct)}% ${t('margin')} · ${fmtINR(s)} ${t('sales')}` : t('noSalesToday')}</small>
           </div>
         </section>
 
         <section>
           <div className="lm-section-head">
-            <span className="lm-label terra">WHAT LUMORA NOTICED</span>
+            <span className="lm-label terra">{t('whatNoticed')}</span>
           </div>
           {insights[0] && <InsightCard insight={insights[0]} onAsk={(q) => onNavigate('copilot', q)} />}
         </section>
 
         <div className="lm-row-actions">
           <button type="button" className="lm-btn primary" onClick={() => onNavigate('home')}>
-            See Home
+            {t('seeHome')}
           </button>
           <button type="button" className="lm-btn ghost" onClick={() => onNavigate('copilot', insights[0]?.question)}>
-            Ask Copilot
+            {t('askCopilot')}
           </button>
           <button type="button" className="lm-btn ghost" onClick={() => setSaved(false)}>
-            Edit today
+            {t('editToday')}
           </button>
         </div>
       </div>
@@ -113,12 +115,12 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
     <div className="lm-stack">
       <section className="lm-hero compact">
         <div>
-          <span className="lm-label terra">TODAY’S CHECK-UP</span>
-          <h2>Tell us what happened today.</h2>
-          <p>Just the basics. You can leave anything blank.</p>
+          <span className="lm-label terra">{t('checkup')}</span>
+          <h2>{t('checkupIntro')}</h2>
+          <p>{t('basics')}</p>
           {existing && (
             <p className="lm-field-hint">
-              You’ve already recorded today. Saving again updates sales and expenses; credit and payments are added.
+              {t('alreadyRecorded')}
             </p>
           )}
         </div>
@@ -127,8 +129,8 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
       <section className="lm-card lm-form">
         <AmountField
           id="sales"
-          label="How much did you sell today?"
-          hint="Total sales, cash and digital together."
+          label={t('howMuchSold')}
+          hint={t('totalSalesHint')}
           value={sales}
           onChange={setSales}
           chips={chipsFor(typical(records, 'sales'), [2000, 5000, 10000, 15000])}
@@ -137,24 +139,24 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
 
         <AmountField
           id="expenses"
-          label="How much did you spend today?"
-          hint="Stock, rent share, transport, helpers, anything the business paid for."
+          label={t('howMuchSpent')}
+          hint={t('expensesHint')}
           value={expenses}
           onChange={setExpenses}
           chips={chipsFor(typical(records, 'expenses'), [500, 1000, 2500, 5000])}
         />
 
         <div className="lm-preview" aria-live="polite">
-          <span>Estimated profit</span>
+          <span>{t('estimatedProfit')}</span>
           <strong className={profit < 0 ? 'neg' : ''}>{fmtINR(profit)}</strong>
-          <small>{s > 0 ? `${Math.round(pct)}% margin` : 'Add today’s sales to see your margin'}</small>
+            <small>{s > 0 ? `${Math.round(pct)}% ${t('margin')}` : t('addSalesMargin')}</small>
         </div>
 
         {open.length > 0 && (
           <div className="lm-sub">
             <AmountField
               id="received"
-              label="Did anyone pay back money they owed?"
+              label={t('didPayBack')}
               value={received}
               onChange={setReceived}
               chips={[500, 1000, 2000, 5000]}
@@ -162,10 +164,10 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
             {toNumber(received) > 0 && (
               <div className="lm-field">
                 <label htmlFor="payer" className="lm-field-label">
-                  Who paid?
+                  {t('whoPaid')}
                 </label>
                 <select id="payer" className="lm-input" value={paidId} onChange={(ev) => setPaidId(ev.target.value)}>
-                  <option value="">Choose a customer</option>
+                  <option value="">{t('chooseCustomer')}</option>
                   {open.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.customer} · owes {fmtINR(remainingOf(p))}
@@ -180,8 +182,8 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
         <div className="lm-sub">
           <AmountField
             id="credit"
-            label="Did you give anything on credit today?"
-            hint="Sold now, to be paid later."
+              label={t('creditToday')}
+            hint={t('soldLater')}
             value={credit}
             onChange={setCredit}
             chips={[500, 1000, 2000, 5000]}
@@ -189,14 +191,14 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
           {toNumber(credit) > 0 && (
             <div className="lm-field">
               <label htmlFor="cust" className="lm-field-label">
-                Who was it for?
+                {t('whoFor')}
               </label>
               <input
                 id="cust"
                 className="lm-input"
                 value={customer}
                 onChange={(ev) => setCustomer(ev.target.value)}
-                placeholder="Customer name"
+                placeholder={t('customerName')}
                 autoComplete="off"
               />
             </div>
@@ -205,14 +207,14 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
 
         <div className="lm-field">
           <label htmlFor="note" className="lm-field-label">
-            Anything unusual today? <span className="lm-optional">Optional</span>
+            {t('unusualToday')} <span className="lm-optional">{t('optional')}</span>
           </label>
           <input
             id="note"
             className="lm-input"
             value={note}
             onChange={(ev) => setNote(ev.target.value)}
-            placeholder="e.g. Bought extra stock, shop closed early"
+            placeholder={t('notePlaceholder')}
             autoComplete="off"
           />
         </div>
@@ -226,7 +228,7 @@ export default function CheckupPage({ records, pending, insights, onSave, onNavi
         )}
 
         <button type="button" className="lm-btn primary lg block" onClick={handleSave}>
-          Save today
+          {t('saveToday')}
         </button>
       </section>
     </div>
