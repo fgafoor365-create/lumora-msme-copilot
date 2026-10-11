@@ -1,75 +1,100 @@
-# React + TypeScript + Vite
+# Lumora — MSME Copilot 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### AI-Powered Business Assistance for Micro, Small, and Medium Enterprises
 
-Currently, two official plugins are available:
+Lumora is a web application designed to help small businesses manage business information and access useful insights through a modern, user-friendly interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+- **Business Dashboard:** A central interface for business information and insights.
+- **Business Events:** Backend integration for retrieving business event records.
+- **Supabase Integration:** Database connectivity for storing and retrieving business data.
+- **Secure API Access:** The business events endpoint validates Supabase authentication tokens.
+- **Modern Web Interface:** Built using React, TypeScript, and Vite.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend:** React, TypeScript, Vite
+- **Backend:** Node.js
+- **Database:** Supabase
+- **Version Control:** Git and GitHub
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+lumora-msme-copilot/
+├── api/
+├── public/
+├── server/
+├── src/
+├── .gitignore
+├── package.json
+└── README.md
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 
-```
+## ⚙️ Getting Started
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Prerequisites
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Node.js and npm
+- A Supabase project with the required database configuration
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
 
-```
+Clone the repository:
+
+
+git clone https://github.com/fgafoor365-create/lumora-msme-copilot.git
+
+
+Navigate into the project folder:
+
+
+cd lumora-msme-copilot
+
+
+Install dependencies:
+
+
+npm install
+
+
+### Environment Configuration
+
+Create a local `.env` file and configure the environment variables required by the project.
+
+**Important:** Never commit `.env` files, secret keys, or private credentials to GitHub.
+
+### Run the Frontend
+
+
+npm run dev
+
+
+### Run the Backend
+
+Open another terminal and run:
+
+
+npm run server
+
+
+The backend API runs locally at:
+
+
+http://localhost:3001
+
+
+## 🔐 Security
+
+- Keep credentials and API secrets out of source control.
+- Use authentication and appropriate database access policies.
+- Keep Supabase Row Level Security (RLS) enabled where required.
+
+## 🎯 Project Goal
+
+Lumora aims to make business information and insights more accessible to MSMEs through a modern web application and backend data integration.
+
+## 👩‍💻 Development
+
+This project is under active development. Features and integrations may evolve as development progresses.
