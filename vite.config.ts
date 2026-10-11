@@ -7,6 +7,14 @@ import { ledgerDevApi } from './vite-ledger-api.js'
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), ledgerDevApi()],
+  server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:3001',
+      changeOrigin: true,
+    },
+  },
+},
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
