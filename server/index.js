@@ -45,12 +45,21 @@ app.get('/api/business/summary', async (req, res) => {
       return res.status(401).json({ error: 'Invalid or expired session' });
     }
 
-    // This endpoint deliberately returns no fabricated financial data.
-    // Connect it to the verified, user-scoped database schema next.
-    return res.json({
-      userId: user.id,
-      message: 'Authentication verified. Financial data endpoint awaits database schema.',
-    });
+    const { data: events, error: eventsError } = await supabase
+  .from('business_events')
+  .select('id, event_type, amount, description, occurred_on, created_at')
+  .eq('user_id', user.id)
+  .order('occurred_on', { ascending: false });
+
+if (eventsError) {
+  console.error('Business events query failed:', eventsError.message);
+  return res.status(500).json({ error: 'Unable to load business events' });
+}
+
+return res.json({
+  userId: user.id,
+  events: events ?? [],
+});
   } catch {
     return res.status(500).json({ error: 'Unable to verify session' });
   }
